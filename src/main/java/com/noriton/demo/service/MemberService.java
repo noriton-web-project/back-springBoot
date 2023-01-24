@@ -60,6 +60,8 @@ public class MemberService {
         Member member = new Member();
         member.setName(request.getName());
         member.setIsLogined(request.getIsLogined());
+        member.setPosts(result.get().getPosts());
+
         return memberRepository.save(member);
     }
 }

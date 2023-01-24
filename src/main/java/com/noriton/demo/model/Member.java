@@ -23,5 +23,12 @@ public class Member {
     @OneToMany(mappedBy = "member")
     @JsonIgnore(value = false)
     private List<Post> posts = new ArrayList<>();
+
+    public void setPosts(List<Post> posts){
+        if(posts != null){
+            this.posts = posts;
+            for(int i=0; i<posts.size(); i++) posts.get(i).setMember(this);
+        }
+    }
 }
 

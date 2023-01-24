@@ -1,7 +1,9 @@
 package com.noriton.demo.controller;
 
 import com.noriton.demo.model.Member;
+import com.noriton.demo.model.Post;
 import com.noriton.demo.model.request.MemberCreationRequest;
+import com.noriton.demo.model.request.PostCreationRequest;
 import com.noriton.demo.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +36,10 @@ public class MemberController {
     public ResponseEntity<Void> deleteMember(@PathVariable Long id){
         memberService.deleteMember(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/member/{id}")
+    public ResponseEntity<Member> updatePost(@RequestBody MemberCreationRequest request, @PathVariable Long id){
+        return ResponseEntity.ok(memberService.update(id, request));
     }
 }

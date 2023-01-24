@@ -39,18 +39,16 @@ public class PostService {
         LocalDateTime dateTime = LocalDateTime.now();
         postToCreate.setDateTime(dateTime);
 
-        System.out.println("=======================================1");
         Optional<Member> member = memberRepository.findById(post.getId());
-        System.out.println("=======================================2");
         if(member.isPresent()){
-            Member m = member.get();
-            MemberCreationRequest request = new MemberCreationRequest();
-            request.setName(m.getName());
-            request.setIsLogined(m.getIsLogined());
-            request.setPosts(m.getPosts());
-            request.setId(m.getId());
-            Member result = memberService.update(m.getId(), request);
-            postToCreate.setMember(result);
+//            Member m = member.get();
+//            MemberCreationRequest request = new MemberCreationRequest();
+//            request.setName(m.getName());
+//            request.setIsLogined(m.getIsLogined());
+//            request.setPosts(m.getPosts());
+//            request.setId(m.getId());
+//            Member result = memberService.update(m.getId(), request);
+            postToCreate.setMember(member.get());
 
         }
         else{
@@ -69,6 +67,23 @@ public class PostService {
         Post post = new Post();
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
+        LocalDateTime dateTime = LocalDateTime.now();
+        post.setDateTime(dateTime);
+
+        Optional<Member> member = memberRepository.findById(request.getId());
+        if(member.isPresent()){
+//            Member m = member.get();
+//            MemberCreationRequest memberRequest = new MemberCreationRequest();
+//            memberRequest.setName(m.getName());
+//            memberRequest.setIsLogined(m.getIsLogined());
+//            memberRequest.setPosts(m.getPosts());
+//            memberRequest.setId(m.getId());
+//            Member updatedMember = memberService.update(m.getId(), memberRequest);
+            post.setMember(member.get());
+        }
+        else{
+            throw new EntityNotFoundException("Member is not found in the database");
+        }
         return postRepository.save(post);
     }
 
@@ -83,7 +98,7 @@ public class PostService {
     }
 
     @Transactional
-    public Optional<Post> readPostsById(Long id){
-        return postRepository.findById(id);
+    public List<Post> readPostsById(Long id){
+        return postRepository.findByMemberId(id);
     }
 }
