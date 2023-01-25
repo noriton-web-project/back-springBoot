@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,19 +36,14 @@ public class PostService {
     @Transactional
     public Post save(PostCreationRequest post){
         Post postToCreate = new Post();
-        BeanUtils.copyProperties(post, postToCreate);
+//        BeanUtils.copyProperties(post, postToCreate);
+        postToCreate.setTitle(post.getTitle());
+        postToCreate.setContent(post.getContent());
         LocalDateTime dateTime = LocalDateTime.now();
         postToCreate.setDateTime(dateTime);
 
-        Optional<Member> member = memberRepository.findById(post.getId());
+        Optional<Member> member = memberRepository.findById(post.getMemberId());
         if(member.isPresent()){
-//            Member m = member.get();
-//            MemberCreationRequest request = new MemberCreationRequest();
-//            request.setName(m.getName());
-//            request.setIsLogined(m.getIsLogined());
-//            request.setPosts(m.getPosts());
-//            request.setId(m.getId());
-//            Member result = memberService.update(m.getId(), request);
             postToCreate.setMember(member.get());
 
         }
@@ -70,20 +66,23 @@ public class PostService {
         LocalDateTime dateTime = LocalDateTime.now();
         post.setDateTime(dateTime);
 
-        Optional<Member> member = memberRepository.findById(request.getId());
+        Optional<Member> member = memberRepository.findById(request.getMemberId());
         if(member.isPresent()){
-//            Member m = member.get();
-//            MemberCreationRequest memberRequest = new MemberCreationRequest();
-//            memberRequest.setName(m.getName());
-//            memberRequest.setIsLogined(m.getIsLogined());
-//            memberRequest.setPosts(m.getPosts());
-//            memberRequest.setId(m.getId());
-//            Member updatedMember = memberService.update(m.getId(), memberRequest);
+            List<Post> posts = member.get().getPosts();
+            Iterator<Post> iter = posts.iterator();
+            while(iter.hasNext()) {
+                Post p = iter.next();
+                if (p.getId() == id) {
+                    posts.remove(p);
+                    break;
+                }
+            }
             post.setMember(member.get());
         }
         else{
             throw new EntityNotFoundException("Member is not found in the database");
         }
+        postRepository.deleteById(id);
         return postRepository.save(post);
     }
 
