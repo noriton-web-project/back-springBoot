@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
+
+
+
+
 
     private final PostService postService;
 
