@@ -45,7 +45,6 @@ public class PostService {
         Optional<Member> member = memberRepository.findById(post.getMemberId());
         if(member.isPresent()){
             postToCreate.setMember(member.get());
-
         }
         else{
             throw new EntityNotFoundException("Member is not found in the database");
@@ -60,7 +59,7 @@ public class PostService {
             throw new EntityNotFoundException("Post is not present in the database");
         }
 
-        Post post = new Post();
+        Post post = result.get();
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
         LocalDateTime dateTime = LocalDateTime.now();
@@ -68,21 +67,11 @@ public class PostService {
 
         Optional<Member> member = memberRepository.findById(request.getMemberId());
         if(member.isPresent()){
-            List<Post> posts = member.get().getPosts();
-            Iterator<Post> iter = posts.iterator();
-            while(iter.hasNext()) {
-                Post p = iter.next();
-                if (p.getId() == id) {
-                    posts.remove(p);
-                    break;
-                }
-            }
             post.setMember(member.get());
         }
         else{
             throw new EntityNotFoundException("Member is not found in the database");
         }
-        postRepository.deleteById(id);
         return postRepository.save(post);
     }
 

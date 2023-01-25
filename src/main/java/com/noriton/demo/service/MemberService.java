@@ -6,6 +6,7 @@ import com.noriton.demo.model.request.MemberCreationRequest;
 import com.noriton.demo.model.request.PostCreationRequest;
 import com.noriton.demo.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,28 +17,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
-    @Transactional
     public Member save(MemberCreationRequest request){
         Member memberToCreate = new Member();
         BeanUtils.copyProperties(request, memberToCreate);
         return memberRepository.save(memberToCreate);
     }
 
-    @Transactional
     public List<Member> readMembers(){
         return memberRepository.findAll();
     }
 
-    @Transactional
     public Member readMember(Long id){
         Optional<Member> member = memberRepository.findById(id);
         if(member.isPresent()){
@@ -46,28 +40,20 @@ public class MemberService {
         throw new EntityNotFoundException("Cant find any member under given ID");
     }
 
-    @Transactional
     public void deleteMember(Long id){
         memberRepository.deleteById(id);
     }
 
-    @Transactional
     public Member update(Long id, MemberCreationRequest request){
         Optional<Member> result = memberRepository.findById(id);
         if(!result.isPresent()){
             throw new EntityNotFoundException("Member is not present in the database");
         }
 
-        Member member = new Member();
+        Member member = result.get();
         member.setName(request.getName());
         member.setIsLogined(request.getIsLogined());
-        List<Post> posts = new ArrayList<>();
-        for(int i=0; i<result.get().getPosts().size(); i++){
-            posts.add(result.get().getPosts().get(i));
-        }
-        //List<Post> posts = request.getPosts();
-        memberRepository.deleteById(id);
-        member.setPosts(posts);
+        member.setPosts(request.getPosts());
 
         return memberRepository.save(member);
     }
