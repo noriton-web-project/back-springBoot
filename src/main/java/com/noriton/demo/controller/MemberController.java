@@ -5,17 +5,16 @@ import com.noriton.demo.model.Post;
 import com.noriton.demo.model.request.MemberCreationRequest;
 import com.noriton.demo.model.request.PostCreationRequest;
 import com.noriton.demo.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @GetMapping("/member")
     public ResponseEntity readMembers(){

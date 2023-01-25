@@ -3,18 +3,16 @@ package com.noriton.demo.controller;
 import com.noriton.demo.model.Post;
 import com.noriton.demo.model.request.PostCreationRequest;
 import com.noriton.demo.service.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
 
     @GetMapping("/post")
     public ResponseEntity readPosts(){
