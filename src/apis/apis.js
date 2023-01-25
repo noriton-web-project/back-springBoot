@@ -18,11 +18,11 @@ export const addBook = (data) => {
     return response;
 }
 
-export const modifyBook = async() => {
-    const response = axios.delete("");
+export const modifyBook = async(data) => {
+    const response = axios.patch("", data);
 }
 
-export const deleteBook = (data) => {
-    const response = axios.patch("",data);
+export const deleteBook = (id) => {
+    const response = axios.delete("");
 }
 
