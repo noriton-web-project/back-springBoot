@@ -32,4 +32,8 @@ public class Post {
         this.member = member;
         member.getPosts().add(this);
     }
+
+    public void setMemberOnly(Member member) {
+        this.member = member;
+    }
 }

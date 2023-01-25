@@ -55,7 +55,7 @@ public class MemberService {
     public Member update(Long id, MemberCreationRequest request){
         Optional<Member> result = memberRepository.findById(id);
         if(!result.isPresent()){
-            throw new EntityNotFoundException("Post is not present in the database");
+            throw new EntityNotFoundException("Member is not present in the database");
         }
 
         Member member = new Member();
@@ -65,6 +65,7 @@ public class MemberService {
         for(int i=0; i<result.get().getPosts().size(); i++){
             posts.add(result.get().getPosts().get(i));
         }
+        //List<Post> posts = request.getPosts();
         memberRepository.deleteById(id);
         member.setPosts(posts);
 
